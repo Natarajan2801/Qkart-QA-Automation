@@ -26,7 +26,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class QkartSanity {
 
     public static String lastGeneratedUserName;
-
+     
 
     public static RemoteWebDriver createDriver() throws MalformedURLException {
         // Launch Browser using Zalenium
@@ -90,6 +90,7 @@ public class QkartSanity {
      * Verify that an existing user is not allowed to re-register on QKart
      */
     public static Boolean TestCase02(RemoteWebDriver driver) throws InterruptedException {
+        
         Boolean status;
         logStatus("Start Testcase", "Test Case 2: Verify User Registration with an existing username ", "DONE");
 
@@ -118,11 +119,14 @@ public class QkartSanity {
         return !status;
     }
 
-    public static void main(String[] args) throws InterruptedException, MalformedURLException {
+    public static void main(String[] args) throws InterruptedException, MalformedURLException
+     {
         int totalTests = 0;
         int passedTests = 0;
         Boolean status;
         // Maximize and Implicit Wait for things to initailize
+         // driver.get("https://crio-qkart-frontend-qa.vercel.app/");
+        RemoteWebDriver driver = createDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
@@ -156,4 +160,5 @@ public class QkartSanity {
         }
 
     }
+
 }

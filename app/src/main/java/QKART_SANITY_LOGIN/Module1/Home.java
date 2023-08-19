@@ -27,6 +27,8 @@ public class Home {
         try {
             // Find and click on the Logout Button
             WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
+            //*[@id="root"]/div/div/div[1]/div[3]/button
+          //  WebElement logout_button = driver.findElement(By.xpath(" //*[@id=root']/div/div/div[1]/div[3]/button"));
             logout_button.click();
 
             // Wait for Logout to Complete
