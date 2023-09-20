@@ -27,21 +27,28 @@ public class Login {
     public Boolean PerformLogin(String Username, String Password) throws InterruptedException {
         // Find the Username Text Box
         WebElement username_txt_box = this.driver.findElement(By.id("username"));
+
         // Enter the username
         username_txt_box.sendKeys(Username);
+
         // Wait for user name to be entered
+        Thread.sleep(1000);
+
         // Find the password Text Box
         WebElement password_txt_box = this.driver.findElement(By.id("password"));
+
         // Enter the password
         password_txt_box.sendKeys(Password);
+
         // Find the Login Button
         WebElement login_button = driver.findElement(By.className("button"));
+
         // Click the login Button
         login_button.click();
 
-        // SLEEP_STMT_13: Wait for Login to Complete
         // Wait for Login action to complete
-        Thread.sleep(3000);
+        Thread.sleep(5000);
+
         return this.VerifyUserLoggedIn(Username);
     }
 

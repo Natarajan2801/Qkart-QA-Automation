@@ -33,8 +33,8 @@ public class Register {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         String test_data_username;
-        // Concatenate the timestamp to string to form unique timestamp
         if (makeUsernameDynamic)
+            // Concatenate the timestamp to string to form unique timestamp
             test_data_username = Username + "_" + String.valueOf(timestamp.getTime());
         else
         test_data_username = Username;
@@ -62,11 +62,11 @@ public class Register {
         // Click the register now button
         register_now_button.click();
         // Wait for registration to complete
-       
-        // SLEEP_STMT_06: Wait for new user to get created in the backend
         Thread.sleep(3000);
 
+
         this.lastGeneratedUsername = test_data_username;
+
         return this.driver.getCurrentUrl().endsWith("/login");
     }
 }

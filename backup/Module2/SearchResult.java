@@ -2,6 +2,7 @@ package QKART_SANITY_LOGIN.Module1;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -27,20 +28,20 @@ public class SearchResult {
         // Find the element containing the title (product name) of the search result and
         // assign the extract title text to titleOfSearchResult
        //div[contains(@class,'MuiCardContent-root')]/p[contains(@class,'css-yg30e6')]
-       //
         Thread.sleep(2000);
         WebElement titleElement = parentElement.findElement(By.xpath(".//p[@class ='MuiTypography-root MuiTypography-body1 css-yg30e6']"));
         //*[@id="root"]/div/div/div[3]/div/div[2]/div/div/div[1]/p[1]
         titleOfSearchResult = titleElement.getText();
+        Thread.sleep(2000);
+    // titleOfSearchResult= parentElement.findElement(By.className("css-yg30e6")).getText();
+     
+              //  driver.findElement(By.xpath(""));
      return titleOfSearchResult;
     }
-
-
 
     /*
      * Return Boolean denoting if the open size chart operation was successful
      */
-
     public Boolean openSizechart() {
         try {
 
@@ -140,6 +141,10 @@ public class SearchResult {
                 }
                 //  System.out.println();
             }
+
+            
+
+
             return status;
 
         } catch (Exception e) {

@@ -33,11 +33,11 @@ public class Checkout {
              * text box and click on the "ADD" button to save the address
              */
             driver.findElement(By.xpath("//button[text()='Add new address']")).click();
-           // Thread.sleep(2000);
+            Thread.sleep(2000);
             driver.findElement(By.xpath("//textarea")).sendKeys(addresString);
-           // Thread.sleep(2000);
+            Thread.sleep(2000);
             driver.findElement(By.xpath("//button[text()='Add']")).click();
-           // Thread.sleep(2000);
+            Thread.sleep(2000);
             return false;
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
@@ -58,6 +58,11 @@ public class Checkout {
              */
             List<WebElement> listAddress= driver.findElements(By.xpath("//div[contains(@class,'address-item')]"));
             String xpath="//p[text()='"+addressToSelect+"']";
+          //  String check=driver.findElement(By.xpath(xpath)).getText();
+            // if(addressToSelect.contains(check)){
+                
+            // }
+            
             for(WebElement l : listAddress){
                 String check=l.findElement(By.xpath(xpath)).getText();
                     if(addressToSelect.contains(check)){
@@ -102,7 +107,6 @@ public class Checkout {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 07: MILESTONE 6
            String check= driver.findElement(By.xpath("//*[@id='notistack-snackbar']")).getText();
-          // System.out.print(check);
            if(check.contains("You do not have enough balance in your wallet for this purchase"))
             return true;
             else 
@@ -111,31 +115,5 @@ public class Checkout {
             System.out.println("Exception while verifying insufficient balance message: " + e.getMessage());
             return false;
         }
-    }
-
-    public Boolean checkIframe(RemoteWebDriver driver) throws InterruptedException {
-        String curURL=driver.getCurrentUrl();
-        Boolean status=false;
-       int num=driver.findElements(By.xpath("//iframe")).size();
-       if(num!=3){
-            System.out.println("Test Case 11: Fail For Iframe Scenario");
-            return false;
-       }
-       driver.switchTo().frame(0);
-       driver.findElement(By.xpath("//button[text()='View Cart']")).click();
-       driver.switchTo().parentFrame();
-       status=!curURL.equals(driver.getCurrentUrl());
-      // driver.navigate().back();
-    //driver.switchTo().frame(nameOrId)
-        driver.get(curURL);
-        Thread.sleep(3000);
-      
-       driver.switchTo().frame(1);
-       driver.findElement(By.xpath("//button[text()='View Cart']")).click();
-       driver.switchTo().parentFrame();
-       status=!curURL.equals(driver.getCurrentUrl());
-        driver.get(curURL);
-      
-        return status;
     }
 }

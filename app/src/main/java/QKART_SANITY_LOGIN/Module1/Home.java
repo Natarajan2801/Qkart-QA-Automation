@@ -1,8 +1,9 @@
 package QKART_SANITY_LOGIN.Module1;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
+import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -29,8 +30,9 @@ public class Home {
             WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
             logout_button.click();
 
+            // SLEEP_STMT_10: Wait for Logout to complete
             // Wait for Logout to Complete
-            Thread.sleep(3000);
+            Thread.sleep(1000);
 
             return true;
         } catch (Exception e) {
@@ -39,16 +41,35 @@ public class Home {
         }
     }
 
+    public Boolean MultipleWindowHandling(String PageName, RemoteWebDriver driver)
+            throws InterruptedException {
+       // String xpath = "//a[text()='" + PageName + "']";
+      //  String check = driver.getCurrentUrl();
+       // driver.findElement(By.xpath(xpath)).click();
+       driver.findElement(By.linkText(PageName)).click();
+        PageName=PageName.toLowerCase();
+        String endingURL =PageName.split(" ")[0];
+        String parent = driver.getWindowHandle();
+        Set<String> s = driver.getWindowHandles();
+        driver.switchTo().window(s.toArray(new String[s.size()])[1]);
+     //   System.out.println(driver.getCurrentUrl());
+        Thread.sleep(2000);
+        Boolean status=driver.getCurrentUrl().contains("https://crio-qkart-frontend-qa.vercel.app/"+endingURL);
+        driver.close();
+        driver.switchTo().window(s.toArray(new String[s.size()])[0]);
+        //  driver.switchTo().window(parent);
+        return status;
+    }
+
     /*
-     * Returns Boolean if searching for the given product name occurs without any
-     * errors
+     * Returns Boolean if searching for the given product name occurs without any errors
      */
     public Boolean searchForProduct(String product) {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Clear the contents of the search box and Enter the product name in the search
             // box
-            WebElement searchbox= driver.findElement(By.xpath("(//input[@name='search'])[1]"));
+            WebElement searchbox = driver.findElement(By.xpath("(//input[@name='search'])[1]"));
             searchbox.clear();
             searchbox.sendKeys(product);
             return true;
@@ -67,10 +88,13 @@ public class Home {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Find all webelements corresponding to the card content section of each of
             // search results
-            //div[contains(@class,'MuiCardContent-root')]
-             //div[contains(@class,'css-sycj1h')]
-            searchResults=driver.findElements(By.xpath("  //div[contains(@class,'MuiCardContent-root')]"));
-            
+            // div[contains(@class,'MuiCardContent-root')]
+            // div[contains(@class,'css-sycj1h')]
+            Thread.sleep(2000);
+
+            searchResults = driver
+                    .findElements(By.xpath("  //div[contains(@class,'MuiCardContent-root')]"));
+
             return searchResults;
         } catch (Exception e) {
             System.out.println("There were no search results: " + e.getMessage());
@@ -83,14 +107,16 @@ public class Home {
      * Returns Boolean based on if the "No products found" text is displayed
      */
     public Boolean isNoResultFound() {
-        Boolean status = false;
+
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Check the presence of "No products found" text in the web page. Assign status
             // = true if the element is *displayed* else set status = false
-            return status;
+            String check = driver.findElement(By.xpath("//h4")).getText();
+
+            return check.contains("No products found") ? true : false;
         } catch (Exception e) {
-            return status;
+            return false;
         }
     }
 
@@ -101,29 +127,30 @@ public class Home {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             /*
-             * Iterate through each product on the page to find the WebElement corresponding
-             * to the matching productName
+             * Iterate through each product on the page to find the WebElement corresponding to the
+             * matching productName
              * 
              * Click on the "ADD TO CART" button for that element
              * 
              * Return true if these operations succeeds
              */
             Thread.sleep(2000);
-            List<WebElement> list=driver.findElements(By.xpath(" //div[contains(@class,'css-sycj1h')]"));
-            Boolean flag=true; 
-            for(WebElement l : list){
-                String check=l.getText();
-                if(check.contains(productName)){
+            List<WebElement> list =
+                    driver.findElements(By.xpath(" //div[contains(@class,'css-sycj1h')]"));
+            Boolean flag = true;
+            for (WebElement l : list) {
+                String check = l.getText();
+                if (check.contains(productName)) {
                     l.findElement(By.xpath("//button[text()='Add to cart']")).click();
-                    flag=false;
+                    flag = false;
                     break;
                 }
             }
-            if(flag){
+            if (flag) {
                 System.out.println("Unable to find the given product");
                 return false;
             }
-           return true;
+            return true;
         } catch (Exception e) {
             System.out.println("Exception while performing add to cart: " + e.getMessage());
             return false;
@@ -147,8 +174,7 @@ public class Home {
     }
 
     /*
-     * Return Boolean denoting the status of change quantity of product in cart
-     * operation
+     * Return Boolean denoting the status of change quantity of product in cart operation
      */
     public Boolean changeProductQuantityinCart(String productName, int quantity) {
         try {
@@ -159,118 +185,64 @@ public class Home {
             // Increment or decrement the quantity of the matching product until the current
             // quantity is reached (Note: Keep a look out when then input quantity is 0,
             // here we need to remove the item completely from the cart)
-                //div[contains(@class,'css-zgtx0t')]//div[text()='Xtend Smart Watch']
-                //div[@data-testid='item-qty']
-                //*[@data-testid='RemoveOutlinedIcon']
-                //*[@data-testid='AddOutlinedIcon']
-               // Thread.sleep(2000);
-               //div[contains(@class,'css-1gjj37g')]
+            // div[contains(@class,'css-zgtx0t')]//div[text()='Xtend Smart Watch']
+            // div[@data-testid='item-qty']
+            // *[@data-testid='RemoveOutlinedIcon']
+            // *[@data-testid='AddOutlinedIcon']
+            // Thread.sleep(2000);
+            // div[contains(@class,'css-1gjj37g')]
 
-                 List<WebElement> list=driver.findElements(By.xpath("//div[contains(@class,'css-1gjj37g')]"));
-                // String xpath="//div[text()='"+productName+"']";
+            List<WebElement> list =
+                    driver.findElements(By.xpath("//div[contains(@class,'css-1gjj37g')]"));
+            // String xpath="//div[text()='"+productName+"']";
 
-                //div[contains(@class,'css-1gjj37g')]/div[1]
-                for(int i=0;i<list.size();i++){
-                      //  String xpath="  //div[contains(@class,'css-zgtx0t')]//div[text()='"+productName+"']";
-                      //  String CheckName=driver.findElement(By.xpath("//div[contains(@class,'css-1gjj37g')]/div[1]")).getText();
-                      String CheckName=driver.findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["+(i+1)+"]/div/div[2]/div[1]")).getText();
+            // div[contains(@class,'css-1gjj37g')]/div[1]
+            for (int i = 0; i < list.size(); i++) {
+                // String xpath="
+                // //div[contains(@class,'css-zgtx0t')]//div[text()='"+productName+"']";
+                // String
+                // CheckName=driver.findElement(By.xpath("//div[contains(@class,'css-1gjj37g')]/div[1]")).getText();
+                String CheckName =
+                        driver.findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["
+                                + (i + 1) + "]/div/div[2]/div[1]")).getText();
 
-                    
-                if(CheckName.contains(productName)){
-                        String cur_quatitiy=driver.findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["+(i+1)+"]/div/div[2]/div[2]/div[1]/div")).getText();
 
-                      //  String cur_quatitiy=list.get(i).findElement(By.xpath(" //div[@data-testid='item-qty']")).getText();
-                      
-                        int current_quantity=Integer.parseInt(cur_quatitiy);
+                if (CheckName.contains(productName)) {
+                    String cur_quatitiy = driver
+                            .findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["
+                                    + (i + 1) + "]/div/div[2]/div[2]/div[1]/div"))
+                            .getText();
 
-                        if(quantity>current_quantity){
-                            for(int j=current_quantity;j<quantity;j++){
-                               // String a=" //*[@id="root"]/div/div/div[3]/div[2]/div/div["+i+1+"]/div/div[2]/div[2]/div[1]/button[2]";
-                                WebElement incrementBtn=driver.findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["+(i+1)+"]/div/div[2]/div[2]/div[1]/button[2]"));
-                                incrementBtn.click();
-                                Thread.sleep(3000);
-                            }
+                    // String cur_quatitiy=list.get(i).findElement(By.xpath("
+                    // //div[@data-testid='item-qty']")).getText();
+
+                    int current_quantity = Integer.parseInt(cur_quatitiy);
+
+                    if (quantity > current_quantity) {
+                        for (int j = current_quantity; j < quantity; j++) {
+                            // String a="
+                            // //*[@id="root"]/div/div/div[3]/div[2]/div/div["+i+1+"]/div/div[2]/div[2]/div[1]/button[2]";
+                            WebElement incrementBtn = driver.findElement(
+                                    By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["
+                                            + (i + 1) + "]/div/div[2]/div[2]/div[1]/button[2]"));
+                            incrementBtn.click();
+                            Thread.sleep(2000);
                         }
-                        else if(quantity<current_quantity) {
-                            for(int j=current_quantity;j>quantity;j--){
-                                WebElement decrementBtn=driver.findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["+(i+1)+"]/div/div[2]/div[2]/div[1]/button[1]"));
-                                decrementBtn.click();
-                                Thread.sleep(3000);
-                            }
-
+                    } else if (quantity < current_quantity) {
+                        for (int j = current_quantity; j > quantity; j--) {
+                            WebElement decrementBtn = driver.findElement(
+                                    By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div["
+                                            + (i + 1) + "]/div/div[2]/div[2]/div[1]/button[1]"));
+                            decrementBtn.click();
+                            Thread.sleep(2000);
                         }
-                        // else if(quantity==0){
-                        //     WebElement decrementBtn=list.get(i).findElement(By.xpath("   //*[@id='root']/div/div/div[3]/div[2]/div/div["+i+1+"]/div/div[2]/div[2]/div[1]/button[1]"));
-                        //     decrementBtn.click();
-                        //     Thread.sleep(2000);
-                        // }
-                        // return true;
 
+                    }
 
                 }
 
-
-
-                // return false;
-
-               
-                // List<WebElement> list=driver.findElements(By.xpath("//div[contains(@class,'css-1gjj37g')]"));
-                // String xpath="//div[text()='"+productName+"']";
-
-                // for(WebElement ele : list){
-                //     String check=ele.findElement(By.xpath(xpath)).getText();
-                //     if(check.contains(productName)){
-                //         Thread.sleep(1000);
-                //         String num=ele.findElement(By.xpath("//div[@data-testid='item-qty']")).getText();
-                //         int n=Integer.parseInt(num);
-                //         System.out.println(n +" "+productName+" "+quantity);
-                //             //1<=2
-                //             //1<=0
-                //         if(n<quantity){
-                //             //1<2
-                //             // while(n<quantity){
-                //             //     Thread.sleep(1000);
-                //             //         ele.findElement(By.xpath(" //*[@data-testid='AddOutlinedIcon']")).click();
-                //             //         n++;
-                //             // }
-
-                //             for(int i=n;i<quantity;i++){
-                //                 System.out.println("--------" + n +" " + productName + " " + quantity +"--------");
-                //                 Thread.sleep(1000);
-                //                 ele.findElement(By.xpath("//*[@data-testid='AddOutlinedIcon']")).click();
-                                
-                //             }
-                //             //    break;
-                //         }       //1>0
-                //         else if(n>quantity){
-                //             System.out.println("--------" + n +" " + productName + " " + quantity +"--------");
-                //         //     while(n>quantity){
-                //         //         Thread.sleep(1000);
-                //         //         ele.findElement(By.xpath(" //*[@data-testid='AddOutlinedIcon']")).click();
-                //         //         n--;
-                //         // }
-
-                //         for(int i=n;i>quantity;i--){
-                //             System.out.println("--------" + n +" " + productName + " " + quantity +"--------");
-                //             Thread.sleep(1000);
-                //                 ele.findElement(By.xpath(" //*[@data-testid='RemoveOutlinedIcon']")).click();
-                              
-                //         }
-                //        // break;
-                                
-                //         }
-                //         else if(quantity==0){
-                //             System.out.println("--------" + n +" " + productName + " " + quantity +"--------");
-                //             Thread.sleep(1000);
-                //                 ele.findElement(By.xpath(" //*[@data-testid='RemoveOutlinedIcon']")).click();
-                              
-
-                //         }
-                //     }
-                // }
-
-                }
-           return true;
+            }
+            return true;
         } catch (Exception e) {
             if (quantity == 0)
                 return true;
@@ -279,20 +251,18 @@ public class Home {
         }
 
 
+
     }
 
-    /*
-     * Return Boolean denoting if the cart contains items as expected
-     */
     public Boolean verifyCartContents(List<String> expectedCartContents) {
         try {
             WebElement cartParent = driver.findElement(By.className("cart"));
             List<WebElement> cartContents = cartParent.findElements(By.className("css-zgtx0t"));
 
-            ArrayList<String> actualCartContents = new ArrayList<String>() {
-            };
+            ArrayList<String> actualCartContents = new ArrayList<String>() {};
             for (WebElement cartItem : cartContents) {
-                actualCartContents.add(cartItem.findElement(By.className("css-1gjj37g")).getText().split("\n")[0]);
+                actualCartContents.add(
+                        cartItem.findElement(By.className("css-1gjj37g")).getText().split("\n")[0]);
             }
 
             for (String expected : expectedCartContents) {
